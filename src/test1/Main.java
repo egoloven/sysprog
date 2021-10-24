@@ -1,22 +1,47 @@
 package test1;
-
-import java.io.FileReader;
-import java.io.IOException;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class Main {
-	static String name = "Eugene";
+
+	private static char[] vowels = new char[]{'a', 'e', 'i', 'o', 'u', 'y', 'A', 'E', 'I', 'O', 'U', 'Y'}; 
+
+	private static double countPers(String word) {
+		int counter = 0;
+
+		for(int i = 0; i < word.length(); ++i) {
+			if(new String(vowels).indexOf(word.charAt(i)) != -1) {
+				++counter;
+			}
+		}
+		return (double) counter / word.length();
+	}
 
 	public static void main(String[] args) {
-		try {
-			FileReader reader = new FileReader("/Users/whisper-/Documents/java/test1/src/files/input.txt");
-            int character;
- 
-            while ((character = reader.read()) != -1) {
-                System.out.print((char) character);
-            }
-            reader.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+		Map<String, Double> map = new HashMap<String, Double>();
+
+		Reader reader = new Reader();
+		reader.readFile("/Users/whisper-/Documents/java/test1/src/files/input.txt");
+		String[] words = reader.getWords();
+
+		for(String item : words) {
+			if(item.length() == 0) {
+				continue;
+			}
+
+			String word;
+
+			if(item.length() > 30) {
+				word = item.substring(0, 30);
+			} else {
+				word = item;
+			}
+
+			map.put(word, countPers(word));
 		}
+
+		List<Entry<String, Double>> list = new ArrayList<>(map.entrySet());
+		list.sort(Entry.comparingByValue());
+		list.forEach(System.out::println);
 	}
 }
